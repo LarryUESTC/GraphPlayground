@@ -1,17 +1,15 @@
 import numpy as np
 import random as random
 import torch
-from params import parse_args,printConfig
-import os
+from params import parse_args
 import models
 
 from ray import tune
-from ray.tune.suggest.hebo import HEBOSearch
 import ray
 from ray.tune.integration.torch import DistributedTrainableCreator
-from sql_writer import WriteToDatabase, get_primary_key_and_value, get_columns, merge_args_and_dict, merge_args_and_config
-from statistics import mean, stdev
-import socket, getpass, os
+from utils.sql_writer import WriteToDatabase, get_primary_key_and_value, get_columns, merge_args_and_dict, merge_args_and_config
+from statistics import mean
+import socket, os
 import gc
 import copy
 TUNE = False
@@ -75,12 +73,11 @@ def main_one(config, checkpoint_dir = None):
         test_acc, training_time, stop_epoch = embedder.training()
 
         ################STA|write one|###############
-        writer_matric_seed = {'epoch': -1, "seed": seed,"test_time": training_time,"stop_epoch": stop_epoch,}
-        writer.write(writer_matric_seed,
-                     {
-                         "test_acc": test_acc,
-                     }
-                     )
+        try:
+            writer_matric_seed = {'epoch': -1, "seed": seed,"test_time": training_time,"stop_epoch": stop_epoch,}
+            writer.write(writer_matric_seed,{"test_acc": test_acc,})
+        except:
+            print("DataBase is not available, it's fine")
         ################END|write one|###############
         ACC_seed.append(test_acc)
         # St_seed.append(np.mean(test_st))
@@ -89,16 +86,13 @@ def main_one(config, checkpoint_dir = None):
         gc.collect()
 
     ################STA|write seed|###############
-    writer_matric_seed = {'epoch': -2, "seed": -2,"test_time": mean(Time_seed), "stop_epoch": -2
-                          }
-    writer.write(writer_matric_seed,
-                 {
-                     "test_acc": mean(ACC_seed),
-                 }
-                 )
+    try:
+        writer_matric_seed = {'epoch': -2, "seed": -2,"test_time": mean(Time_seed), "stop_epoch": -2}
+        writer.write(writer_matric_seed,{ "test_acc": mean(ACC_seed),})
+    except:
+        print("DataBase is not available, it's fine")
     ################END|write seed|###############
-    if TUNE:
-        tune.report(test_sum = mean(ACC_seed))
+
 
 def main(args):
     # param set
@@ -126,7 +120,7 @@ def main(args):
             num_gpus_per_worker=0.5,
             num_workers=1,
         )
-        tune.run(distributed_ray_run, config=config, num_samples=1000 )
+        tune.run(distributed_ray_run, config=config, num_samples=1000)
         # search_alg.save('checkpoint_alg')
     else:
         config = {

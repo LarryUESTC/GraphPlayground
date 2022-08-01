@@ -6,7 +6,7 @@ from munkres import Munkres
 from sklearn import metrics
 import numpy as np
 import torch
-from models.logreg import LogReg
+from models.Basic.logreg import LogReg
 
 
 np.random.seed(0)

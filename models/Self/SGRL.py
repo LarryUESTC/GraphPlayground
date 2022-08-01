@@ -1,22 +1,13 @@
 import time
 from utils import process
-from embedder import embedder_single
+from models.embedder import embedder_single
 import os
-from tqdm import tqdm
 from evaluate import evaluate, accuracy
-from models.Net import SUGRL_Fast, GCN_Fast
+from models.Layers import SUGRL_Fast, GNN_Model
 import numpy as np
-import random as random
 import torch.nn.functional as F
 import torch
 import torch.nn as nn
-from dgl.nn import GraphConv, EdgeConv, GATConv
-
-# np.random.seed(0)
-# torch.backends.cudnn.deterministic = True
-# torch.manual_seed(0)
-# torch.cuda.manual_seed_all(0)
-# random.seed(0)
 
 
 class SGRL(embedder_single):
@@ -108,7 +99,7 @@ class GCN(embedder_single):
         #     os.makedirs(self.args.save_root)
         nb_classes = (self.labels.max() - self.labels.min() + 1).item()
         self.cfg.append(nb_classes)
-        self.model = GCN_Fast(self.args.ft_size, cfg=self.cfg, final_mlp = 0, gnn = self.args.gnn, dropout=self.args.random_aug_feature).to(self.args.device)
+        self.model = GNN_Model(self.args.ft_size, cfg=self.cfg, final_mlp = 0, gnn = self.args.gnn, dropout=self.args.random_aug_feature).to(self.args.device)
 
     def training(self):
 

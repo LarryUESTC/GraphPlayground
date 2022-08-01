@@ -2,8 +2,8 @@ import numpy as np
 import torch.nn as nn
 import torch
 from tqdm import tqdm
-from models.Net import GNN_layer, act_layer, AvgReadout, Discriminator
-from embedder import embedder_single
+from models.Layers import GNN_layer, act_layer, AvgReadout, Discriminator
+from models.embedder import embedder_single
 import os
 from evaluate import evaluate
 

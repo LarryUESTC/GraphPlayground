@@ -5,8 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
 from torch_geometric.utils import degree
-from models.Net import make_mlplayers
-from embedder import embedder_single
+from models.Layers import make_mlplayers
+from models.embedder import embedder_single
 from evaluate import evaluate
 
 class sugrl(nn.Module):

@@ -1,9 +1,9 @@
 import time
 import os
-from embedder import embedder
+from models.embedder import embedder
 from tqdm import tqdm
 from evaluate import evaluate
-from models.Net import make_mlplayers
+from models.Layers import make_mlplayers
 #from models.SUGRL_Fast import SUGRL_Fast
 import numpy as np
 import random as random

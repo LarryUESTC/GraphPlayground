@@ -1,17 +1,9 @@
-import torch.nn as nn
-import numpy as np
-import random as random
 import torch
 import torch.nn as nn
 from dgl.nn import GraphConv, EdgeConv, GATConv, SAGEConv, GINConv
 import torch.nn.functional as F
 import math
 from torch_geometric.nn import GCNConv, ChebConv
-# np.random.seed(0)
-# torch.backends.cudnn.deterministic = True
-# torch.manual_seed(0)
-# torch.cuda.manual_seed_all(0)
-# random.seed(0)
 
 
 # Applies an average on seq, of shape (nodes, features)
@@ -219,11 +211,9 @@ class SUGRL_Fast(nn.Module):
 
         return embeding_a, embeding_b
 
-class GCN_Fast(nn.Module):
+class GNN_Model(nn.Module):
     def __init__(self, n_in ,cfg = None, batch_norm=False, act='relu', gnn='GCN', dropout = 0.0, final_mlp = 0):
-        super(GCN_Fast, self).__init__()
-        # self.MLP = make_mlplayers(n_in, cfg, batch_norm=False, act=None, dropout = 0, out_layer =None)
-        # self.backbone = make_GCNlayers(n_in, cfg, batch_norm=False, act='gelu', dropout = dropout, out_layer =cfg[-1])
+        super(GNN_Model, self).__init__()
 
         self.dropout = dropout
         self.bat = batch_norm
@@ -256,8 +246,8 @@ class GCN_Fast(nn.Module):
         else:
             self.mlp = None
 
-        # for m in self.modules():
-        #     self.weights_init(m)
+        for m in self.modules():
+            self.weights_init(m)
 
     def weights_init(self, m):
         if isinstance(m, nn.Linear):
@@ -402,7 +392,6 @@ class Env_Net(torch.nn.Module):
             x = F.dropout(x, training=self.training)
         self.embedding = self.conv2(adj, x)
         return F.log_softmax(self.embedding, dim=1)
-
 
 class Env_Net_RLG(nn.Module):
     def __init__(self, n_in ,cfg = None, batch_norm=False, act='relu', gnn='GCN_org', dropout = 0.0, final_mlp = 0):

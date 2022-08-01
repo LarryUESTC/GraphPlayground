@@ -36,7 +36,7 @@ class Semi_Gcn(Semi):
 
     def replace(self):
         super(Semi_Gcn, self).replace()
-        self.args.__setattr__('method', 'Gcn')
+        self.args.__setattr__('method', 'SEMI_GCN')
         self.args.__setattr__('lr', 0.05)
 
 class Semi_Gcn_Cora(Semi_Gcn):
