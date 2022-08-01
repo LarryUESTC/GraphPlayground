@@ -1,4 +1,4 @@
-# Graph Playground (_vsion-0.1_)
+# Graph Playground (_v-0.1_)
 
 ![image](utils/data/github.png)
 
