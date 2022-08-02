@@ -30,7 +30,7 @@ def load_single_graph(args=None):
         idx_test = data.test_mask#.ravel()
 
 
-    i = torch.LongTensor([data.edge_index[0].numpy(), data.edge_index[1].numpy()])
+    i = torch.Tensor.long(data.edge_index)
     v = torch.FloatTensor(torch.ones([data.num_edges]))
     A_sp = torch.sparse.FloatTensor(i, v, torch.Size([data.num_nodes, data.num_nodes]))
     A = A_sp.to_dense()
